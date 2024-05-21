@@ -1,0 +1,14 @@
+{
+  "name": "proyecto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"npm start --prefix back\" \"npm start --prefix front\"",
+    "start-back": "npm start --prefix back",
+    "start-front": "npm start --prefix front"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
