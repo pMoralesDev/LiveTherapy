@@ -20,6 +20,11 @@ const port: string | number = process.env.PORT || 8000;
 // Endpoint para la ruta http://localhost:8000/api
 app.use( '/api', rootRouter );
 
+// Servidor estatico
+app.use(express.static('public'));
+
+// TODO mongoose conection
+
 // Configuracion de seguridad
 app.use(helmet());
 app.use(cors());
