@@ -1,15 +1,13 @@
-const expres = require('express')
-const dotenv = require('dotenv')
+import express, {Express, Request, Response} from 'express';
+import dotenv from 'dotenv';
 
-// Configuracion del .env
 dotenv.config();
 
-// Creacion de la aplicacion de express
-const app = expres()
-const port = process.env.PORT || 8000
+const app:Express = express();
+const port: string | number = process.env.PORT || 8000;
 
 // Definimos la ruta principal de la API
-app.get('/', (req, res) => {
+app.get('/', (req:Request, res:Response) => {
     res.send('Welcome to Live Therapy API')
 })
 

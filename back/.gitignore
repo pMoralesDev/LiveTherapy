@@ -1,2 +1,12 @@
 #Node.js
 node_modules
+
+#Test
+__test__
+coverage
+
+#Build
+dist
+
+#entorno
+.env
