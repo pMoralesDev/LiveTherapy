@@ -15,11 +15,14 @@ import swaggerUi from 'swagger-ui-express'
 import rootRouter from '../routes'
 import mongoose from "mongoose";
 import connectDB from "./mongo.db";
+import bodyParser from "body-parser";
 
 dotenv.config();
 
 const app:Express = express();
 const port: string | number = process.env.PORT || 8000;
+
+app.use(bodyParser.json());
 
 // Endpotin para swagger
 app.use(

@@ -33,7 +33,6 @@ const userSchema: Schema<IUser&Document> = new Schema(
         phone: {
             type: String,
             required: true,
-            match: [/^\d{10}$/, 'Por favor ingrese un número de teléfono válido']
         }
     },
     {
