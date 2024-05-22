@@ -5,9 +5,9 @@ node_modules
 __test__
 coverage
 
-#Build
-dist
-
 #entorno
 .env
 mocks
+
+#Build
+dist

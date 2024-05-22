@@ -11,5 +11,5 @@ export const citaEntity = () => {
         }
     )
 
-    return mongoose.models.Cita || mongoose.model('Cita', citaSchema);
+    return mongoose.models.Citas || mongoose.model('Citas', citaSchema);
 }

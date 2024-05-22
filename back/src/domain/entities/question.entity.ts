@@ -9,5 +9,5 @@ export const questionEntity = () => {
         }
     )
 
-    return mongoose.models.Question || mongoose.model('Question', questionSchema);
+    return mongoose.models.Questions || mongoose.model('Questions', questionSchema);
 }

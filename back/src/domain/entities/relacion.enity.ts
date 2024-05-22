@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
-import { IRelacion } from '../interfaces/IRelacion.interface';
+import { IRegistro } from '../interfaces/IRegistro.interface';
 
 export const relacionEntity = () => {
     
-    let relacionSchema = new mongoose.Schema<IRelacion>(
+    let relacionSchema = new mongoose.Schema<IRegistro>(
         {
             name:String
         }
     )
 
-    return mongoose.models.Relacion || mongoose.model('Relacion', relacionSchema);
+    return mongoose.models.Registros || mongoose.model('Registros', relacionSchema);
 }

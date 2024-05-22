@@ -9,5 +9,5 @@ export const cuestionarioEntity = () => {
         }
     )
 
-    return mongoose.models.Cuestionario || mongoose.model('Cuestionario', cuestionarioSchema);
+    return mongoose.models.Cuestionarios || mongoose.model('Cuestionarios', cuestionarioSchema);
 }

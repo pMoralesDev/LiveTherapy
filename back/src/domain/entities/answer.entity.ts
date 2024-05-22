@@ -11,5 +11,5 @@ export const answerEntity = () => {
         }
     )
 
-    return mongoose.models.Answer || mongoose.model('Answer', answerSchema);
+    return mongoose.models.Answers || mongoose.model('Answers', answerSchema);
 }
