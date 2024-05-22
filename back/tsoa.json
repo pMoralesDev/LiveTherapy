@@ -1,14 +1,25 @@
 {
-    "entryFile": "src/index.ts",
-    "noImplicitAdditionalProperties":"throw-on-extras",
-    "controllerPathGlobs": ["src/controller/**/*.ts"],
-    
+    "entryFile": "src/controllers/userController.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": [
+      "src/controllers/*.ts"
+    ],
     "spec": {
-        "outputDirectory":"public",
-        "specVersion":3
+      "outputDirectory": "dist",
+      "specVersion": 3,
+      "outputFileName": "swagger.json",
+      "securityDefinitions": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      },
+      "basePath": "/api"
     },
-    
     "routes": {
-        "routesDir": "src/routes"
-      }
-}
+      "routesDir": "src/routes",
+      "authenticationModule": "src/auth/authentication.ts",
+      "middleware": "src/middleware.ts"
+    }
+  }
+  

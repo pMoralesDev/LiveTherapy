@@ -1,18 +1,48 @@
-import mongoose from 'mongoose';
-import { IUser } from '../interfaces/IUser.interface';
+import mongoose, { Schema } from 'mongoose';
+import { IUser, UserRoles } from '../interfaces/IUser.interface';
 
-export const userEntity = () => {
-    
-    let userSchema = new mongoose.Schema<IUser>(
-        {
-            rol: {type: String, required: true},
-            name: {type: String, required: true},
-            email: {type: String, required: true},
-            password: {type: String, required: true},
-            age: {type: Number, required: true},
-            phone: {type: String, required: true},
+const userSchema: Schema<IUser&Document> = new Schema(
+    {
+        rol: {
+            type: String,
+            required: true,
+            enum: Object.values(UserRoles)
+        },
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            match: [/.+\@.+\..+/, 'Por favor ingrese un correo electrónico válido']
+        },
+        password: {
+            type: String,
+            required: true,
+            minlength: [6, 'La contraseña debe tener al menos 6 caracteres']
+        },
+        age: {
+            type: Number,
+            required: true,
+            min: [0, 'La edad no puede ser negativa'],
+            max: [118, 'La persona más longeva del mundo vivió 117 años y 78 días'],
+        },
+        phone: {
+            type: String,
+            required: true,
+            match: [/^\d{10}$/, 'Por favor ingrese un número de teléfono válido']
         }
-    )
+    },
+    {
+        timestamps: true
+    }
+);
 
-    return mongoose.models.Users || mongoose.model('Users', userSchema);
-}
+userSchema.index({ email: 1 });
+
+const UserModel = mongoose.models.Users || mongoose.model<IUser&Document>('Users', userSchema);
+
+export default UserModel;

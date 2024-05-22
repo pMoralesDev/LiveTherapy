@@ -1,27 +1,34 @@
 import express, { Request, Response } from "express"; 
-import { userController } from "../controller/userController";
-import {LogInfo} from '../utils/logger';
+import { UserController } from "../controller/userController";
+import { LogInfo, LogError } from '../utils/logger';
 
-let userRouter = express.Router();
+const userRouter = express.Router();
 
 // http://localhost:8000/api/users
 userRouter.route('/')
-    .get(async (req:Request, res: Response) => {
-        let controller = new userController();
-        let id: string | undefined = req.query.id as string;
+    .get(async (req: Request, res: Response) => {
+        const controller = new UserController();
+        const id: string | undefined = req.query.id as string;
 
-        if(id){
-            try {
-                let result = await controller.getUsers(id);
-                return res.status(200).send(result);
-            } catch (error) {
-                LogInfo(`Usuario con id: ${id} no encontrado`);
-                return res.status(500).send({ message: 'Usuario no encontrado'});
+        try {
+            if (id) {
+                const result = await controller.getUsers(id);
+                if (result) {
+                    LogInfo(`Usuario con id: ${id} encontrado`);
+                    return res.status(200).json(result);
+                } else {
+                    LogInfo(`Usuario con id: ${id} no encontrado`);
+                    return res.status(404).json({ message: `Usuario con id: ${id} no encontrado` });
+                }
+            } else {
+                const result = await controller.getUsers();
+                LogInfo(`Todos los usuarios obtenidos`);
+                return res.status(200).json(result);
             }
-        } else{
-            return res.status(200).send(await controller.getUsers());
+        } catch (error) {
+            LogError(`Error al obtener usuario(s): ${error}`);
+            return res.status(500).json({ message: 'Error interno del servidor' });
         }
-        
-    })
+    });
 
 export default userRouter;
