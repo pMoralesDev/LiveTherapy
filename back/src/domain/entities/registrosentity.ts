@@ -9,5 +9,5 @@ export const registroEntity = () => {
         }
     )
 
-    return mongoose.model('Registro', registroSchema);
+    return mongoose.models.Registro || mongoose.model('Registro', registroSchema);
 }

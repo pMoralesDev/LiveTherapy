@@ -5,9 +5,11 @@ export const citaEntity = () => {
     
     let citaSchema = new mongoose.Schema<ICita>(
         {
-            name:String
+            date: {type: Date, required: true},
+            acude: {type: Boolean, required: true},
+            informe: {type: String, required: true},
         }
     )
 
-    return mongoose.model('Cita', citaSchema);
+    return mongoose.models.Cita || mongoose.model('Cita', citaSchema);
 }

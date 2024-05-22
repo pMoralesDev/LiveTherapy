@@ -1,6 +1,14 @@
 import dotenv from 'dotenv';
 import app from './server';
 import { LogError } from './utils/logger';
+import { register } from 'tsconfig-paths';
+
+register({
+    baseUrl: './dist',
+    paths: {
+      "@/*": ["src/*"]
+    }
+  });
 
 dotenv.config();
 

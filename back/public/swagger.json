@@ -1,0 +1,112 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"mongoose.Types.ObjectId": {
+				"type": "string"
+			},
+			"userRoles": {
+				"enum": [
+					"admin",
+					"paciente",
+					"terapeuta"
+				],
+				"type": "string"
+			},
+			"IUser": {
+				"properties": {
+					"_id": {
+						"$ref": "#/components/schemas/mongoose.Types.ObjectId"
+					},
+					"rol": {
+						"$ref": "#/components/schemas/userRoles"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"rol",
+					"name",
+					"email",
+					"password",
+					"age",
+					"phone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "live-therapy-back",
+		"version": "1.0.0",
+		"description": "API de la aplicacion web LIve therapy",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "@pmoralesdev"
+		}
+	},
+	"paths": {
+		"/api/users": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IUser"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"userController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

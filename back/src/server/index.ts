@@ -7,15 +7,26 @@ import dotenv from "dotenv";
 // Seguridad
 import cors from 'cors';
 import helmet from 'helmet';
+// Swagger
+import swaggerUi from 'swagger-ui-express'
 
 //TODO Https
 
 import rootRouter from '../routes'
+import mongoose from "mongoose";
+import connectDB from "./mongo.db";
 
 dotenv.config();
 
 const app:Express = express();
 const port: string | number = process.env.PORT || 8000;
+
+// Endpotin para swagger
+app.use(
+    '/api/docs', swaggerUi.serve, swaggerUi.setup( undefined, {
+        swaggerOptions: {url: "/swagger.json", explorer: true}
+    })
+)
 
 // Endpoint para la ruta http://localhost:8000/api
 app.use( '/api', rootRouter );
@@ -23,7 +34,8 @@ app.use( '/api', rootRouter );
 // Servidor estatico
 app.use(express.static('public'));
 
-// TODO mongoose conection
+//Mongoose conection
+connectDB();
 
 // Configuracion de seguridad
 app.use(helmet());

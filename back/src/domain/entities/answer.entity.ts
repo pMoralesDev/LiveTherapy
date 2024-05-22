@@ -5,9 +5,11 @@ export const answerEntity = () => {
     
     let answerSchema = new mongoose.Schema<IAnswer>(
         {
-            name:String
+            name: {type: String, required: true},
+            text: {type: String, required: true},
+            tipo: {type: String, required: true},
         }
     )
 
-    return mongoose.model('Answer', answerSchema);
+    return mongoose.models.Answer || mongoose.model('Answer', answerSchema);
 }
