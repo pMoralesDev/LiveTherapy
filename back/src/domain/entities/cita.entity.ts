@@ -1,15 +1,26 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { ICita } from '../interfaces/ICita.interface';
 
-export const citaEntity = () => {
-    
-    let citaSchema = new mongoose.Schema<ICita>(
-        {
-            date: {type: Date, required: true},
-            acude: {type: Boolean, required: true},
-            informe: {type: String, required: true},
-        }
-    )
+const citaSchema: Schema<ICita & Document> = new Schema(
+  {
+    date: {
+      type: Date,
+      required: true,
+    },
+    acude: {
+      type: Boolean,
+      required: true,
+    },
+    informe: {
+      type: String,
+      required: true,
+    }
+  },
+  {
+    timestamps: true
+  }
+);
 
-    return mongoose.models.Citas || mongoose.model('Citas', citaSchema);
-}
+const CitaModel = mongoose.models.Citas || mongoose.model<ICita & Document>('Citas', citaSchema);
+
+export default CitaModel;
