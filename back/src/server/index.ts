@@ -13,9 +13,10 @@ import swaggerUi from 'swagger-ui-express'
 //TODO Https
 
 import rootRouter from '../routes'
-import mongoose from "mongoose";
 import connectDB from "./mongo.db";
 import bodyParser from "body-parser";
+import passport, { authErrorHandler } from "@/config/passport.config";
+import authRouter from "@/routes/authRouter";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ const app:Express = express();
 const port: string | number = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 // Endpotin para swagger
 app.use(
@@ -31,8 +33,14 @@ app.use(
     })
 )
 
-// Endpoint para la ruta http://localhost:8000/api
-app.use( '/api', rootRouter );
+// Ruta de autenticación http://localhost:8000/api/auth
+app.use('/api/auth', authRouter);
+
+// Endpoint protegido para la ruta http://localhost:8000/api
+app.use('/api', passport.authenticate('jwt', { session: false }), rootRouter);
+
+// Manejo de errores de autenticación
+app.use(authErrorHandler);
 
 // Servidor estatico
 app.use(express.static('public'));

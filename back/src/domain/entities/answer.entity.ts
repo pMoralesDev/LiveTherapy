@@ -1,28 +1,45 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
-import { IAnswer, answerType } from '../interfaces/IAnswer.interface';
+import mongoose, { Schema, Document } from 'mongoose';
+import { AnswerType, IAnswerBase, ILikertAnswer, IShortAnswer } from '../interfaces/IAnswer.interface';
 
-const answerSchema: Schema<IAnswer & Document> = new Schema(
+const answerBaseSchema: Schema<IAnswerBase> = new Schema(
   {
-    name: {
-      type: String,
-      required: true
+    idPregunta: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Questions'
     },
-    text: {
-      type: String,
-      required: true
-    },
-    tipo: {
+    type: {
       type: String,
       required: true,
-      enum: Object.values(answerType)
+      enum: Object.values(AnswerType)
     }
   },
   {
     timestamps: true,
-    discriminatorKey: 'tipo'
+    discriminatorKey: 'type' // This field is used to differentiate the answer types
   }
 );
 
-const AnswerModel = mongoose.models.Answers || mongoose.model<IAnswer & Document>('Answers', answerSchema);
+const AnswerModel = mongoose.models.Answers || mongoose.model<IAnswerBase>('Answers', answerBaseSchema);
 
-export default AnswerModel;
+const LikertAnswerModel = AnswerModel.discriminator<ILikertAnswer>(
+  AnswerType.LIKERT,
+  new Schema({
+    respuesta: {
+      type: Number,
+      required: true
+    }
+  })
+);
+
+const ShortAnswerModel = AnswerModel.discriminator<IShortAnswer>(
+  AnswerType.SHORT,
+  new Schema({
+    respuesta: {
+      type: String,
+      required: true
+    }
+  })
+);
+
+export { AnswerModel, LikertAnswerModel, ShortAnswerModel };

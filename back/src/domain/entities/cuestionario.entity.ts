@@ -7,15 +7,23 @@ const cuestionarioSchema: Schema<ICuestionario> = new Schema(
       type: String,
       required: true,
     },
+    modelo: {
+      type: Boolean,
+      required: true
+    },
     tipo: {
       type: String,
       required: true,
       enum: Object.values(cuestionarioTipo),
     },
     preguntas: [{
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Questions',
     }],
+    respuestas: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Answers'
+    }]
   },
   {
     timestamps: true,

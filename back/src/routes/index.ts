@@ -11,6 +11,8 @@ import citaRouter from "./citaRouter";
 import questionRouter from "./questionRouter";
 import cuestionarioRouter from "./cuestionariosRouter";
 import messageRouter from "./messageRouter";
+import terapiaRouter from "./terapiaRouter";
+import answerRouter from "./answerRouter";
 
 let server = express();
 
@@ -31,6 +33,8 @@ server.use('/citas', citaRouter); //http://localhost:8000/api/citas --> CitaRout
 server.use('/questions', questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
 server.use('/cuestionarios', cuestionarioRouter); //http://localhost:8000/api/cuestionarios --> QuestionRouter
 server.use('/messages', messageRouter); //http://localhost:8000/api/messages --> QuestionRouter
+server.use('/answers', answerRouter); //http://localhost:8000/api/answers --> AnswerRouter
+server.use('/terapias', terapiaRouter); //http://localhost:8000/api/terapias --> TerapiaRouter
 
 
 export default server;

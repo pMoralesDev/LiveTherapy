@@ -2,10 +2,12 @@
  * 
  */
 
+import { IAnswerBase, ILikertAnswer, IShortAnswer } from "@/domain/interfaces/IAnswer.interface";
 import { ICita } from "@/domain/interfaces/ICita.interface";
 import { ICuestionario } from "@/domain/interfaces/ICuestionario.interface";
 import { IMessage } from "@/domain/interfaces/IMessage.interface";
 import { IQuestion } from "@/domain/interfaces/IQuestion.interface";
+import { ITerapia } from "@/domain/interfaces/ITerapia.interface";
 import { IUser } from "@/domain/interfaces/IUser.interface";
 
 export interface IUserController {
@@ -41,4 +43,17 @@ export interface IMessageController {
     getMessages(id?: string): Promise<IMessage | IMessage[]>;
     createMessage(message: IMessage): Promise<IMessage>;
     updateMessage(id: string, message: Partial<IMessage>): Promise<IMessage | null>;
-  }
+}
+
+export interface IAnswerController {
+    getAnswers(id?: string): Promise<IAnswerBase | IAnswerBase[]>;
+    createAnswer(answer: ILikertAnswer | IShortAnswer): Promise<IAnswerBase>;
+}
+
+export interface ITerapiaController {
+    getTerapias(id?: string): Promise<ITerapia | ITerapia[]>;
+    createTerapia(terapia: ITerapia): Promise<ITerapia>;
+    updateTerapia(id: string, terapia: Partial<ITerapia>):Promise<ITerapia | null>;
+    deleteTerapia(id:String): Promise <ITerapia | null>;
+}
+

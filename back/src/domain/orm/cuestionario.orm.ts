@@ -5,7 +5,7 @@ import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
 export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] | ICuestionario | null> => {
   try {
     if (id) {
-      const cuestionario = await CuestionarioModel.findById(id).populate('preguntas').exec();
+      const cuestionario = await CuestionarioModel.findById(id).populate('preguntas', 'answers').exec();
       if (cuestionario) {
         LogSuccess(`[ORM SUCCESS]: Cuestionario found with ID ${id}`);
         return cuestionario;
@@ -14,7 +14,7 @@ export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] 
         return null;
       }
     } else {
-      const cuestionarios = await CuestionarioModel.find().populate('preguntas').exec();
+      const cuestionarios = await CuestionarioModel.find().populate('preguntas', 'answers').exec();
       LogSuccess(`[ORM SUCCESS]: All cuestionarios retrieved`);
       return cuestionarios;
     }

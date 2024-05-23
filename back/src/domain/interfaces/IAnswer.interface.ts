@@ -1,13 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from 'mongoose';
 
-export enum answerType {
-    LIKERT = 'likert',
-    SHORT = 'short'
+export enum AnswerType {
+  LIKERT = 'likert',
+  SHORT = 'short'
 }
 
-export interface IAnswer {
-    _id?: mongoose.Types.ObjectId;
-    name: string,
-    text:string,
-    tipo:answerType,
+export interface IAnswerBase extends Document {
+  idPregunta: mongoose.Types.ObjectId;
+  type: AnswerType;
 }
+
+export interface ILikertAnswer extends IAnswerBase {
+  respuesta: number;
+}
+
+export interface IShortAnswer extends IAnswerBase {
+  respuesta: string;
+}
+
