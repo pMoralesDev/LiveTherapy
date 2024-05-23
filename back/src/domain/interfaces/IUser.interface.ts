@@ -8,7 +8,7 @@ export enum UserRoles {
 
 export interface IUser extends Document {
     _id: Schema.Types.ObjectId;
-    rol: UserRoles;
+    role: UserRoles;
     name: string;
     email: string;
     password: string;

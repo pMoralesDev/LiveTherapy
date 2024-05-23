@@ -2,6 +2,7 @@ import { IUser } from '@/domain/interfaces/IUser.interface';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { LogInfo } from './logger';
 
 dotenv.config();
 const secretKey = process.env.SECRETKEY || 'thIs$mi@Jwt>secret';
@@ -22,7 +23,7 @@ export const generateToken = (user: IUser): string => {
     const payload = {
         id: user._id,
         email: user.email,
-        role: user.rol
+        role: user.role
     };
 
     return jwt.sign(payload, secretKey, { expiresIn: '1h' });

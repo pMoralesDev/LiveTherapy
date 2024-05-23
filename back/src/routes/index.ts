@@ -13,6 +13,7 @@ import cuestionarioRouter from "./cuestionariosRouter";
 import messageRouter from "./messageRouter";
 import terapiaRouter from "./terapiaRouter";
 import answerRouter from "./answerRouter";
+import { verifyToken } from "@/middlewares/authMiddlewares";
 
 let server = express();
 
@@ -28,13 +29,13 @@ rootRouter.get('/', (req: Request, res: Response) => {
 
 //Redirecciones de las diferentes peticiones hacia su corespondiente ruta
 server.use('/', rootRouter); //http://localhost:8000/api
-server.use('/users', userRouter); //http://localhost:8000/api/users --> UserRouter
-server.use('/citas', citaRouter); //http://localhost:8000/api/citas --> CitaRouter
-server.use('/questions', questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
-server.use('/cuestionarios', cuestionarioRouter); //http://localhost:8000/api/cuestionarios --> QuestionRouter
-server.use('/messages', messageRouter); //http://localhost:8000/api/messages --> QuestionRouter
-server.use('/answers', answerRouter); //http://localhost:8000/api/answers --> AnswerRouter
-server.use('/terapias', terapiaRouter); //http://localhost:8000/api/terapias --> TerapiaRouter
+server.use('/users', verifyToken, userRouter); //http://localhost:8000/api/users --> UserRouter
+server.use('/citas', verifyToken, citaRouter); //http://localhost:8000/api/citas --> CitaRouter
+server.use('/questions', verifyToken, questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
+server.use('/cuestionarios', verifyToken, cuestionarioRouter); //http://localhost:8000/api/cuestionarios --> QuestionRouter
+server.use('/messages', verifyToken, messageRouter); //http://localhost:8000/api/messages --> QuestionRouter
+server.use('/answers', verifyToken, answerRouter); //http://localhost:8000/api/answers --> AnswerRouter
+server.use('/terapias', verifyToken, terapiaRouter); //http://localhost:8000/api/terapias --> TerapiaRouter
 
 
 export default server;

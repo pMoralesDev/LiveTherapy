@@ -4,8 +4,8 @@
 
 import { Body, Get, Put, Post,Delete, Query, Route, Tags } from 'tsoa';
 import { IUserController } from './interfaces';
-import { LogError, LogInfo, LogSuccess } from '../utils/logger';
-import { createUserORM, deleteUserORM,  getUsersORM, updateUserORM } from '../domain/orm/user.orm';
+import { LogError, LogInfo, LogSuccess, LogWarning } from '../utils/logger';
+import { createUserORM, deleteUserORM,  getUserByIdORM,  getUsersORM, updateUserORM } from '../domain/orm/user.orm';
 import { IUser } from '@/domain/interfaces/IUser.interface';
 import mongoose from 'mongoose';
 
@@ -13,22 +13,31 @@ import mongoose from 'mongoose';
 @Route('/api/users')
 @Tags('UserController')
 export class UserController implements IUserController {
+
+  public async getUserByID(@Query() id?: string | undefined): Promise<IUser | null> {
+    try {
+      const result = await getUserByIdORM(id);
+      if (id && result) {
+        LogSuccess(`[/api/users] Encontrado usuario con ID: ${id}`);
+        return result as IUser; 
+      } else {
+        LogWarning(`[/api/users] Facilitados todos los usuarios`);
+        return null; 
+      }
+    } catch (error) {
+      LogError(`[/api/users] Error buscando usuarios ${error}`);
+      throw new Error('Error buscando usuarios');
+    }
+  }
   /**
    * Obtener usuarios
    * @param {mongoose.Types.ObjectId} id ID del usuario buscado
    * @returns usuario o lista de usuarios
    */
   @Get('/')
-  public async getUsers(@Query() id?: string): Promise<IUser | IUser[]> {
+  public async getUsers(): Promise<IUser | IUser[]> {
     try {
-      const result = await getUsersORM(id);
-      if (id && result) {
-        LogSuccess(`[/api/users] Encontrado usuario con ID: ${id}`);
-        return result as IUser; 
-      } else {
-        LogSuccess(`[/api/users] Facilitados todos los usuarios`);
-        return result as IUser[]; 
-      }
+      return await getUsersORM();
     } catch (error) {
       LogError(`[/api/users] Error buscando usuarios ${error}`);
       throw new Error('Error buscando usuarios');
@@ -64,8 +73,8 @@ export class UserController implements IUserController {
         return null;
       }
     } catch (error) {
-    //   LogError(`[/api/users] Error al actualizar: ${error}`);
-      throw new Error('');
+        LogError(`[/api/users] Error al actualizar: ${error}`);
+        throw new Error('');
     }
   }
 

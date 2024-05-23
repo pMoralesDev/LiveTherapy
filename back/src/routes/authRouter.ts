@@ -27,10 +27,8 @@ authRouter.post('/register', async (req: Request, res: Response) => {
         });
 
         const savedUser = await newUser.save();
-        LogSuccess(`User registered with ID: ${savedUser._id}`);
         return res.status(201).send(savedUser);
     } catch (error) {
-        LogError(`Error registering user: ${error}`);
         return res.status(500).send({ message: 'Error registering user' });
     }
 });
@@ -39,16 +37,13 @@ authRouter.post('/register', async (req: Request, res: Response) => {
 authRouter.post('/login', async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-        LogInfo(`body: ${email}  ${password}`)
         const user = await UserModel.findOne({ email });
-        LogInfo(`user: ${user.email}  ${user.password}`)
 
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
 
         const isMatch = await comparePassword(password, user.password);
-        LogInfo(`Comparacion: ${isMatch}`)
 
         if (!isMatch) {
             return res.status(400).send({ message: 'Invalid credentials' });

@@ -1,13 +1,21 @@
 import UserModel from "../entities/user.entity";
 import { IUser } from "../interfaces/IUser.interface";
 import { LogError, LogInfo, LogSuccess } from "../../utils/logger";
+import mongoose from "mongoose";
 
-export const getUsersORM = async (id?: string): Promise<IUser[] | IUser | null> => {
+export const getUsersORM = async (): Promise<IUser[]> => {
   try {
- 
-    if (id) {
+      const users = await UserModel.find().exec();
+      LogSuccess(`[ORM SUCCESS]: todos los usuarios encontrados`);
+      return users; 
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al buscar usuarios - ${error}`);
+    throw new Error('Error al buscar usuarios');
+  }
+};
 
-      const user = await UserModel.findById(id).exec();
+export const getUserByIdORM = async (id?: string): Promise< IUser | null> => {
+  const user = await UserModel.findById(id).exec();
       if (user) {
         LogSuccess(`[ORM SUCCESS]: Usuarios con id: ${id} encontrado`);
         return user; 
@@ -15,18 +23,7 @@ export const getUsersORM = async (id?: string): Promise<IUser[] | IUser | null> 
         LogInfo(`[ORM INFO]: Usuario con id: ${id} no encontrado`);
         return null;
       }
-
-    } else {
-     
-      const users = await UserModel.find().exec();
-      LogSuccess(`[ORM SUCCESS]: todos los usuarios encontrados`);
-      return users; 
-    }
-  } catch (error) {
-    LogError(`[ORM ERROR]: Error al buscar usuarios - ${error}`);
-    throw new Error('Error al buscar usuarios');
-  }
-};
+}
 
 export const createUserORM = async (user: IUser): Promise<IUser> => {
   try {

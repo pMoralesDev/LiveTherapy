@@ -3,7 +3,7 @@ import { IUser, UserRoles } from '../interfaces/IUser.interface';
 
 const userSchema: Schema<IUser&Document> = new Schema(
     {
-        rol: {
+        role: {
             type: String,
             required: true,
             enum: Object.values(UserRoles)
