@@ -1,5 +1,5 @@
 import { IUser } from '@/domain/interfaces/IUser.interface';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 

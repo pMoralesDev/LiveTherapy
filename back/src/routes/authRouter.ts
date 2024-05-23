@@ -1,21 +1,27 @@
 import express, { Request, Response } from 'express';
-import { hashPassword, comparePassword, generateToken } from '../utils/auth';
+
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
+import { hashPassword, comparePassword, generateToken } from '../utils/auth'; // Importa las funciones de auth.ts
 import UserModel from '@/domain/entities/user.entity';
 
 const authRouter = express.Router();
 
-// Registro
+// Ruta para registrar usuario
 authRouter.post('/register', async (req: Request, res: Response) => {
     try {
         const { name, email, password, age, phone } = req.body;
-        const hashedPassword = await hashPassword(password);
+        const existingUser = await UserModel.findOne({ email });
 
+        if (existingUser) {
+            return res.status(400).send({ message: 'User already exists' });
+        }
+
+        const hashedPassword = await hashPassword(password);
         const newUser = new UserModel({
             name,
             email,
             password: hashedPassword,
-            rol: 'patient',
+            rol: 'paciente',
             age,
             phone,
         });
@@ -29,17 +35,20 @@ authRouter.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-// Inicio de sesión
+// Ruta para iniciar sesión
 authRouter.post('/login', async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
+        LogInfo(`body: ${email}  ${password}`)
         const user = await UserModel.findOne({ email });
+        LogInfo(`user: ${user.email}  ${user.password}`)
 
         if (!user) {
             return res.status(404).send({ message: 'User not found' });
         }
 
         const isMatch = await comparePassword(password, user.password);
+        LogInfo(`Comparacion: ${isMatch}`)
 
         if (!isMatch) {
             return res.status(400).send({ message: 'Invalid credentials' });
