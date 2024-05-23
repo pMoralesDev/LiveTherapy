@@ -5,7 +5,7 @@ export enum questionType {
   SHORT = 'short'
 }
 
-export interface IQuestion {
+export interface IQuestion extends Document {
   _id: mongoose.Types.ObjectId;
   name: string;
   text: string;
