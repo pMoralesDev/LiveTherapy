@@ -9,6 +9,7 @@ import {LogInfo} from '../utils/logger';
 import userRouter from "./userRouter";
 import citaRouter from "./citaRouter";
 import questionRouter from "./questionRouter";
+import cuestionarioRouter from "./cuestionariosRouter";
 
 let server = express();
 
@@ -27,6 +28,7 @@ server.use('/', rootRouter); //http://localhost:8000/api
 server.use('/users', userRouter); //http://localhost:8000/api/users --> UserRouter
 server.use('/citas', citaRouter); //http://localhost:8000/api/citas --> CitaRouter
 server.use('/questions', questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
+server.use('/cuestionarios', cuestionarioRouter); //http://localhost:8000/api/cuestionarios --> QuestionRouter
 
 
 export default server;
