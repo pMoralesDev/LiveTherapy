@@ -8,6 +8,7 @@ import {LogInfo} from '../utils/logger';
 // Routers
 import userRouter from "./userRouter";
 import citaRouter from "./citaRouter";
+import questionRouter from "./questionRouter";
 
 let server = express();
 
@@ -25,9 +26,7 @@ rootRouter.get('/', (req: Request, res: Response) => {
 server.use('/', rootRouter); //http://localhost:8000/api
 server.use('/users', userRouter); //http://localhost:8000/api/users --> UserRouter
 server.use('/citas', citaRouter); //http://localhost:8000/api/citas --> CitaRouter
-// //Auth router
-// server.use('/auth', authRouter); //http://localhost:8000/api/auth --> AuthRouter
-// //kata router
-// server.use('/katas', katasRouter); //http://localhost:8000/api/katas --> KatasRouter
+server.use('/questions', questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
+
 
 export default server;

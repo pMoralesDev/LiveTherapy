@@ -3,6 +3,7 @@
  */
 
 import { ICita } from "@/domain/interfaces/ICita.interface";
+import { IQuestion } from "@/domain/interfaces/IQuestion.interface";
 import { IUser } from "@/domain/interfaces/IUser.interface";
 
 export interface IUserController {
@@ -18,3 +19,11 @@ export interface ICitaController {
     updateCita(id: string, user: Partial<ICita>): Promise<ICita | null> ;
     deleteCita(id: string): Promise<ICita | null>;
 }
+
+
+export interface IQuestionController {
+    getQuestions(id?: string): Promise<IQuestion | IQuestion[]>;
+    createQuestion(question: IQuestion): Promise<IQuestion>;
+    updateQuestion(id: string, question: Partial<IQuestion>): Promise<IQuestion | null>;
+    deleteQuestion(id: string): Promise<IQuestion | null>;
+  }
