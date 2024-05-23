@@ -10,6 +10,7 @@ import userRouter from "./userRouter";
 import citaRouter from "./citaRouter";
 import questionRouter from "./questionRouter";
 import cuestionarioRouter from "./cuestionariosRouter";
+import messageRouter from "./messageRouter";
 
 let server = express();
 
@@ -29,6 +30,7 @@ server.use('/users', userRouter); //http://localhost:8000/api/users --> UserRout
 server.use('/citas', citaRouter); //http://localhost:8000/api/citas --> CitaRouter
 server.use('/questions', questionRouter); //http://localhost:8000/api/questions --> QuestionRouter
 server.use('/cuestionarios', cuestionarioRouter); //http://localhost:8000/api/cuestionarios --> QuestionRouter
+server.use('/messages', messageRouter); //http://localhost:8000/api/messages --> QuestionRouter
 
 
 export default server;

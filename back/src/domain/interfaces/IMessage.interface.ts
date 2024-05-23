@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from 'mongoose';
 
 export interface IMessage extends Document {
-    _id?: mongoose.Types.ObjectId;
-    senderId: mongoose.Types.ObjectId;
-    receiverId: mongoose.Types.ObjectId;
-    content: string;
-    timestamp: Date;
-  }
+  _id?: mongoose.Types.ObjectId;
+  senderId: mongoose.Types.ObjectId;
+  receiverId: mongoose.Types.ObjectId;
+  content: string;
+  timestamp: Date;
+}

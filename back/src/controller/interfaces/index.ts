@@ -4,6 +4,7 @@
 
 import { ICita } from "@/domain/interfaces/ICita.interface";
 import { ICuestionario } from "@/domain/interfaces/ICuestionario.interface";
+import { IMessage } from "@/domain/interfaces/IMessage.interface";
 import { IQuestion } from "@/domain/interfaces/IQuestion.interface";
 import { IUser } from "@/domain/interfaces/IUser.interface";
 
@@ -35,3 +36,9 @@ export interface ICuestionarioController {
     updateCuestionario(id: string, cuestionario: Partial<ICuestionario>): Promise<ICuestionario | null>;
     deleteCuestionario(id: string): Promise<ICuestionario | null>;
 }
+
+export interface IMessageController {
+    getMessages(id?: string): Promise<IMessage | IMessage[]>;
+    createMessage(message: IMessage): Promise<IMessage>;
+    updateMessage(id: string, message: Partial<IMessage>): Promise<IMessage | null>;
+  }
