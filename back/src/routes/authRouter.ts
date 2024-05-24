@@ -8,6 +8,7 @@ const authRouter = express.Router();
 
 // Ruta para registrar usuario
 authRouter.post('/register', async (req: Request, res: Response) => {
+
     try {
         const { name, email, password, age, phone } = req.body;
         const existingUser = await UserModel.findOne({ email });
@@ -21,7 +22,7 @@ authRouter.post('/register', async (req: Request, res: Response) => {
             name,
             email,
             password: hashedPassword,
-            rol: 'paciente',
+            role: 'paciente',
             age,
             phone,
         });
@@ -29,6 +30,7 @@ authRouter.post('/register', async (req: Request, res: Response) => {
         const savedUser = await newUser.save();
         return res.status(201).send(savedUser);
     } catch (error) {
+        LogError(`error inesperado: ${error}`)
         return res.status(500).send({ message: 'Error registering user' });
     }
 });
