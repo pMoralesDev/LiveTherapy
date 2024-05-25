@@ -25,7 +25,6 @@ export const generateToken = (user: IUser): string => {
         email: user.email,
         role: user.role
     };
-
     return jwt.sign(payload, secretKey, { expiresIn: '1h' });
 };
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { LogError } from '../utils/logger';
+import { LogError, LogInfo } from '../utils/logger';
 import UserModel from '@/domain/entities/user.entity';
 import TerapiaModel from '@/domain/entities/terapia.entity';
 import CuestionarioModel from '@/domain/entities/cuestionario.entity';
