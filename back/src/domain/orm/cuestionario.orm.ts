@@ -5,7 +5,12 @@ import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
 export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] | ICuestionario | null> => {
   try {
     if (id) {
-      const cuestionario = await CuestionarioModel.findById(id).populate('preguntas', 'answers').exec();
+      // Poblar todos los campos de preguntas y anidar la población para answers
+      const cuestionario = await CuestionarioModel.findById(id)
+                                  .populate({
+                                    path: 'preguntas',
+                                  })
+                                  .exec();
       if (cuestionario) {
         LogSuccess(`[ORM SUCCESS]: Cuestionario found with ID ${id}`);
         return cuestionario;
@@ -14,7 +19,15 @@ export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] 
         return null;
       }
     } else {
-      const cuestionarios = await CuestionarioModel.find().populate('preguntas', 'answers').exec();
+      // Aplica la misma lógica para recuperar todos los cuestionarios
+      const cuestionarios = await CuestionarioModel.find()
+                              .populate({
+                                path: 'preguntas',
+                              })
+                              .populate({
+                                path: 'respuestas',
+                              })
+                              .exec();
       LogSuccess(`[ORM SUCCESS]: All cuestionarios retrieved`);
       return cuestionarios;
     }
@@ -68,5 +81,34 @@ export const deleteCuestionarioORM = async (id: string): Promise<ICuestionario |
   } catch (error) {
     LogError(`[ORM ERROR]: Error deleting cuestionario - ${error}`);
     throw new Error('Error deleting cuestionario');
+  }
+};
+
+export const getCuestionarioPreguntasNameORM = async (): Promise<any[]> => {
+  try {
+    const result = await CuestionarioModel.aggregate([
+        {
+            $lookup: {
+                from: 'questions',
+                localField: 'preguntas',
+                foreignField: '_id',
+                as: 'questionDetails'
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                modelo:1,
+                tipo:1,
+                preguntas: '$questionDetails.text',
+                respuestas:1
+            }
+        }
+    ]);
+    LogSuccess(`[ORM SUCCESS]: Cuestionario con nombres de preguntas`);
+    return result;
+  } catch (error) {
+      LogError(`[ORM ERROR]: Error buscando cuestionarios con nombres de preguntas - ${error}`);
+      throw error;
   }
 };

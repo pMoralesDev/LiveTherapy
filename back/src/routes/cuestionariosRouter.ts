@@ -24,17 +24,16 @@ cuestionarioRouter.route('/').get(async (req: Request, res: Response) => {
     return res.status(500).send({ message: 'Error fetching cuestionarios' });
   }
 });
-cuestionarioRouter.route('/').get(async (req: Request, res: Response) => {
+cuestionarioRouter.route('/prueba').get(async (req: Request, res: Response) => {
   let controller = new CuestionarioController();
-  let id: string | undefined = req.query.id as string;
   try {
-    let result;
-    if (id) {
-      result = await controller.getCuestionarios(id);
+    let result = await controller.getCuestionarioPreguntasName();
+    if (result) {
+      return res.status(200).send(result);
     } else {
-      result = await controller.getCuestionarios();
+      return res.status(404).send({ message: 'Error prueba' });
     }
-    return res.status(200).send(result);
+    
   } catch (error) {
     LogError(`Error fetching cuestionarios: ${error}`);
     return res.status(500).send({ message: 'Error fetching cuestionarios' });
@@ -55,7 +54,6 @@ cuestionarioRouter.route('/').put(async (req: Request, res: Response) => {
   let controller = new CuestionarioController();
   let id = req.query.id as string;
   let cuestionario = req.body;
-  LogInfo(`Received PUT request with ID: ${id} and data: ${JSON.stringify(cuestionario)}`);
   try {
     let result = await controller.updateCuestionario(id, cuestionario);
     if (result) {

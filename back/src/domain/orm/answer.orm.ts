@@ -5,7 +5,7 @@ import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
 export const getAnswersORM = async (id?: string): Promise<IAnswerBase[] | IAnswerBase | null> => {
   try {
     if (id) {
-      const answer = await AnswerModel.findById(id).exec();
+      const answer = await AnswerModel.findById(id).populate({path: 'idPregunta'}).exec();
       if (answer) {
         LogSuccess(`[ORM SUCCESS]: Answer found with ID ${id}`);
         return answer;
@@ -14,7 +14,7 @@ export const getAnswersORM = async (id?: string): Promise<IAnswerBase[] | IAnswe
         return null;
       }
     } else {
-      const answers = await AnswerModel.find().exec();
+      const answers = await AnswerModel.find().populate({path: 'idPregunta'}).exec();
       LogSuccess(`[ORM SUCCESS]: All answers retrieved`);
       return answers;
     }

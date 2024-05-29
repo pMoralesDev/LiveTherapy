@@ -21,7 +21,6 @@ import authRouter from "@/routes/authRouter";
 dotenv.config();
 
 const app:Express = express();
-const port: string | number = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
 app.use(passport.initialize());

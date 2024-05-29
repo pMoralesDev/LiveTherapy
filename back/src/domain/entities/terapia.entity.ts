@@ -3,10 +3,6 @@ import { ITerapia } from '../interfaces/ITerapia.interface';
 
 const terapiaSchema: Schema<ITerapia> = new Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
     idTerapeuta: {
       type: Schema.Types.ObjectId,
       required: true,
@@ -17,18 +13,30 @@ const terapiaSchema: Schema<ITerapia> = new Schema(
       required: true,
       ref: 'Users'
     },
-    citas: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Citas'
-    }],
-    registros: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Cuestionarios'
-    }],
-    chat: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Messages'
-    }]
+    citas: {
+      type: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Citas'
+      }],
+      default: [], 
+      required: false 
+    },
+    registros: {
+      type: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cuestionarios'
+      }],
+      default: [],
+      required: false 
+    },
+    chat: {
+      type: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Messages'
+      }],
+      default: [],
+      required: false 
+    },
   },
   {
     timestamps: true,

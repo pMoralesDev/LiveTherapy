@@ -5,7 +5,22 @@ import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
 export const getTerapiasORM = async (id?: string): Promise<ITerapia[] | ITerapia | null> => {
   try {
     if (id) {
-      const terapia = await TerapiaModel.findById(id).populate(['citas', 'registros', 'chat']).exec();
+      const terapia = await TerapiaModel.findById(id)
+        .populate({
+          path: 'idTerapeuta'
+        })
+        .populate({
+          path: 'idPaciente'
+        })
+        .populate({
+          path: 'citas'
+        })
+        .populate({
+          path: 'registros'
+        })
+        .populate({
+          path: 'chat'
+        }).exec();
       if (terapia) {
         LogSuccess(`[ORM SUCCESS]: Terapia found with ID ${id}`);
         return terapia;
@@ -14,7 +29,23 @@ export const getTerapiasORM = async (id?: string): Promise<ITerapia[] | ITerapia
         return null;
       }
     } else {
-      const terapias = await TerapiaModel.find().populate(['citas', 'registros', 'chat']).exec();
+      const terapias = await TerapiaModel.find()
+        .populate({
+          path: 'idTerapeuta'
+        })
+        .populate({
+          path: 'idPaciente'
+        })
+        .populate({
+          path: 'citas'
+        })
+        .populate({
+          path: 'registros'
+        })
+        .populate({
+          path: 'chat'
+        })
+        .exec();
       LogSuccess(`[ORM SUCCESS]: All terapias retrieved`);
       return terapias;
     }

@@ -6,7 +6,7 @@ export enum questionType {
 }
 
 export interface IQuestion extends Document {
-  _id: mongoose.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId;
   name: string;
   text: string;
   tipo: questionType;
