@@ -1,7 +1,14 @@
 import TerapiaModel from '../entities/terapia.entity';
 import { ITerapia } from '../interfaces/ITerapia.interface';
 import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
+import { IUser } from '../interfaces/IUser.interface';
+import UserModel from '../entities/user.entity';
 
+/**
+ * Trae todos los datos relacionados con terapias
+ * @param {string} id de la terapia, es opcional, si se pasa el id busca la terapia concreta y sino trae todas las terapias 
+ * @returns dado que terapias almacena id de otras coleciones, retorna todos los datos de las coleciones a las que hace referencia
+ */
 export const getTerapiasORM = async (id?: string): Promise<ITerapia[] | ITerapia | null> => {
   try {
     if (id) {
@@ -31,16 +38,19 @@ export const getTerapiasORM = async (id?: string): Promise<ITerapia[] | ITerapia
     } else {
       const terapias = await TerapiaModel.find()
         .populate({
-          path: 'idTerapeuta'
+          path: 'idTerapeuta',
+          select: '-password'
         })
         .populate({
-          path: 'idPaciente'
+          path: 'idPaciente',
+          select: '-password'
         })
         .populate({
           path: 'citas'
         })
         .populate({
-          path: 'registros'
+          path: 'registros',
+          select: '-preguntas -respuestas'
         })
         .populate({
           path: 'chat'
@@ -52,6 +62,23 @@ export const getTerapiasORM = async (id?: string): Promise<ITerapia[] | ITerapia
   } catch (error) {
     LogError(`[ORM ERROR]: Error fetching terapias - ${error}`);
     throw new Error('Error fetching terapias');
+  }
+};
+/**
+ * Trae los datos de los pacientes asignados a un terapeuta
+ * @param {string} id del terapeuta del que se quiere obtener los pacientes a su cargo 
+ * @returns devuelve los datos de todos los pacientes asignados a un terapeuta
+ */
+export const getPacientesTerapiaORM = async (id: string): Promise<IUser[] | IUser | null> => {
+  try {
+    const terapias = await TerapiaModel.find({idTerapeuta: id});
+    const pacientesID = terapias.map(terapias => terapias.idPaciente)
+    const pacientes : IUser[] | null = await UserModel.find({_id: {$in: pacientesID}}).select('-password');;
+    LogSuccess(`[ORM SUCCESS]: Obtenidos los pacientes del terapeuta con id ${id}`);
+    return pacientes;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener los pacientes del terapeuta ${error}`);
+    throw new Error('Error creating terapia');
   }
 };
 

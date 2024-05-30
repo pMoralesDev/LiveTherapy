@@ -2,10 +2,10 @@ import { Get, Post, Put, Delete, Body, Query, Route, Tags } from 'tsoa';
 import { ICitaController } from './interfaces';
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
 import { IUser } from '@/domain/interfaces/IUser.interface';
-import { createCitaORM, deleteCitaORM, getCitasORM, updateCitaORM } from '@/domain/orm/cita.orm';
+import { createCitaORM, deleteCitaORM, getCitasORM, getCitasPacienteORM, getCitasTerapeutaORM, updateCitaORM } from '@/domain/orm/cita.orm';
 import { ICita } from '@/domain/interfaces/ICita.interface';
 
-@Route('/api/citas')
+@Route('/api/terapias/citas')
 @Tags('CitaController')
 export class CitaController implements ICitaController {
 
@@ -23,6 +23,40 @@ export class CitaController implements ICitaController {
     } catch (error) {
       LogError(`[/api/citas] Error fetching Citas: ${error}`);
       throw new Error('Error fetching Citas');
+    }
+  }
+
+  @Get('/terapeuta')
+  public async getCitasTerapeuta(@Query() id: string): Promise<ICita | ICita[] | null> {
+    try {
+      const result = await getCitasTerapeutaORM(id);
+      if (result) {
+        LogSuccess(`[/api/citas] Citas del terapetua con ID: ${id}`);
+        return result;
+      } else {
+        LogSuccess(`[/api/citas] No se encontraron citas del terapetua con ID: ${id}`);
+        return result;
+      }
+    } catch (error) {
+      LogError(`[/api/citas] Error buscando citas de terapeuta: ${error}`);
+      throw new Error('Error fetching Citas-terapeuta');
+    }
+  }
+
+  @Get('/paciente')
+  public async getCitasPaciente(@Query() id: string): Promise<ICita | ICita[] | null> {
+    try {
+      const result = await getCitasPacienteORM(id);
+      if (result) {
+        LogSuccess(`[/api/citas] Citas del paciente con ID: ${id}`);
+        return result;
+      } else {
+        LogSuccess(`[/api/citas] No se encontraron citas del paciente con ID: ${id}`);
+        return result;
+      }
+    } catch (error) {
+      LogError(`[/api/citas] Error buscando citas de paciente: ${error}`);
+      throw new Error('Error fetching Citas-paciente');
     }
   }
 

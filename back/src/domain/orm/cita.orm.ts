@@ -1,6 +1,7 @@
 import CitaModel from "../entities/cita.entity";
 import { ICita } from "../interfaces/ICita.interface";
 import { LogError, LogInfo, LogSuccess } from "../../utils/logger";
+import TerapiaModel from "../entities/terapia.entity";
 
 export const getCitasORM = async (id?: string): Promise<ICita[] | ICita | null> => {
   try {
@@ -21,6 +22,47 @@ export const getCitasORM = async (id?: string): Promise<ICita[] | ICita | null> 
   } catch (error) {
     LogError(`[ORM ERROR]: Error buscando citas - ${error}`);
     throw new Error('Error al buscar citas');
+  }
+};
+
+/**
+ * Devuelve los datos de las citas de un terapeuta
+ * @param {string} id del terapeuta del que se quieren conocer su citas
+ * @returns devuelve los datos de todas las citas que tiene un terapeuta
+ */
+export const getCitasTerapeutaORM = async (id: string): Promise<ICita[] | ICita | null> => {
+  try {
+    const terapias = await TerapiaModel.find({idTerapeuta: id})
+        .populate({
+          path: 'citas',
+          model: 'Citas',
+        });
+        const citas = terapias.flatMap(terapias => terapias.citas as ICita[]);
+    LogSuccess(`[ORM SUCCESS]: Obtenidos las citas del terapeuta con id ${id}`);
+    return citas;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener las citas del terapeuta ${error}`);
+    throw new Error('Error creating terapia');
+  }
+};
+/**
+ * Devuelve los datos de las citas de un paciente
+ * @param {string} id del paciente del que se quieren conocer su citas
+ * @returns devuelve los datos de todas las citas que tiene un paciente
+ */
+export const getCitasPacienteORM = async (id: string): Promise<ICita[] | ICita | null> => {
+  try {
+    const terapias = await TerapiaModel.find({idPaciente: id})
+        .populate({
+          path: 'citas',
+          model: 'Citas',
+        });
+        const citas = terapias.flatMap(terapias => terapias.citas as ICita[]);
+    LogSuccess(`[ORM SUCCESS]: Obtenidos las citas del paciente con id ${id}`);
+    return citas;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener las citas del paciente ${error}`);
+    throw new Error('Error creating terapia');
   }
 };
 

@@ -112,3 +112,19 @@ export const getCuestionarioPreguntasNameORM = async (): Promise<any[]> => {
       throw error;
   }
 };
+
+export const getModelTrueCuestionariosORM = async (): Promise <any[]> => {
+  try {
+    const result = await CuestionarioModel.find({modelo: true})
+        .populate({
+          path: 'preguntas',
+          select: 'text tipo -_id'
+        }).
+        select('-respuestas -modelo');
+    LogSuccess(`[ORM SUCCESS]: Modelos de cuestionarios no personalizados`);
+    return result;
+  } catch (error) {
+      LogError(`[ORM ERROR]: Error buscando cuestionarios no personalizados - ${error}`);
+      throw error;
+  }
+};

@@ -2,7 +2,7 @@ import { Get, Post, Put, Delete, Body, Query, Route, Tags } from 'tsoa';
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
 import { ICuestionarioController } from './interfaces';
 import { ICuestionario } from '@/domain/interfaces/ICuestionario.interface';
-import { createCuestionarioORM, deleteCuestionarioORM, getCuestionariosORM, updateCuestionarioORM, getCuestionarioPreguntasNameORM } from '@/domain/orm/cuestionario.orm';
+import { createCuestionarioORM, deleteCuestionarioORM, getCuestionariosORM, updateCuestionarioORM, getCuestionarioPreguntasNameORM, getModelTrueCuestionariosORM } from '@/domain/orm/cuestionario.orm';
 
 
 @Route('/api/cuestionarios')
@@ -34,6 +34,18 @@ export class CuestionarioController implements ICuestionarioController {
     }else {
       return result;
     }
+    } catch (error) {
+      LogError(`[/api/cuestionarios] Error fetching cuestionarios: ${error}`);
+      throw new Error('Error fetching cuestionarios');
+    }
+  }
+
+  @Get('/')
+  public async getModelTrueCuestionarios(): Promise<any[]>{
+    try {
+      const result = await getModelTrueCuestionariosORM();
+      LogSuccess(`[/api/cuestionarios] Respuesta a la peticion de cuestionarios no personalizados`);
+      return result;
     } catch (error) {
       LogError(`[/api/cuestionarios] Error fetching cuestionarios: ${error}`);
       throw new Error('Error fetching cuestionarios');

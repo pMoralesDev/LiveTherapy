@@ -24,14 +24,14 @@ cuestionarioRouter.route('/').get(async (req: Request, res: Response) => {
     return res.status(500).send({ message: 'Error fetching cuestionarios' });
   }
 });
-cuestionarioRouter.route('/prueba').get(async (req: Request, res: Response) => {
+cuestionarioRouter.route('/modelos').get(async (req: Request, res: Response) => {
   let controller = new CuestionarioController();
   try {
-    let result = await controller.getCuestionarioPreguntasName();
+    let result = await controller.getModelTrueCuestionarios();
     if (result) {
       return res.status(200).send(result);
     } else {
-      return res.status(404).send({ message: 'Error prueba' });
+      return res.status(404).send({ message: 'Error al traer los modelos de cuestionario' });
     }
     
   } catch (error) {

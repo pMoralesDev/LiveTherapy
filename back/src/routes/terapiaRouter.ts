@@ -23,6 +23,20 @@ terapiaRouter.route('/').get(async (req: Request, res: Response) => {
       return res.status(500).send({ message: 'Error fetching terapias' });
     }
   });
+
+  // Ruta para obtener todos los pacientes de un terapeuta
+terapiaRouter.route('/pacientes').get(async (req: Request, res: Response) => {
+    let controller = new TerapiaController();
+    let id: string = req.query.id as string;
+    try {
+      let result = await controller.getPacientesTerapia(id);
+      return res.status(200).send(result);
+    } catch (error) {
+      LogError(`Error fetching terapias-pacientes: ${error}`);
+      return res.status(500).send({ message: 'Error fetching terapias-pacientes' });
+    }
+  });
+  // Ruta para crear una terapia
 terapiaRouter.route('/').post(async (req: Request, res: Response) => {
     let controller = new TerapiaController();
     let terapia = req.body;
@@ -34,6 +48,7 @@ terapiaRouter.route('/').post(async (req: Request, res: Response) => {
       return res.status(500).send({ message: 'Error creating terapia' });
     }
   })
+  // Ruta para actualizar una terapia
 terapiaRouter.route('/').put(async (req: Request, res: Response) => {
     let controller = new TerapiaController();
     let id = req.query.id as string;
@@ -51,6 +66,7 @@ terapiaRouter.route('/').put(async (req: Request, res: Response) => {
       return res.status(500).send({ message: 'Error updating terapia' });
     }
   })
+  // Ruta para borrar una terapia
 terapiaRouter.route('/').delete(async (req: Request, res: Response) => {
     let controller = new TerapiaController();
     let id = req.query.id as string;
@@ -84,6 +100,28 @@ terapiaRouter.route('/citas').get(async (req: Request, res: Response) => {
   } catch (error) {
     LogError(`Error fetching Citas: ${error}`);
     return res.status(500).send({ message: 'Error fetching Citas' });
+  }
+})
+terapiaRouter.route('/citas/terapeuta').get(async (req: Request, res: Response) => {
+  let controller = new CitaController();
+  let id: string = req.query.id as string;
+  try {
+    let result = await controller.getCitasTerapeuta(id);
+    return res.status(200).send(result);
+  } catch (error) {
+    LogError(`Error fetching Citas-Terapeuta: ${error}`);
+    return res.status(500).send({ message: 'Error fetching Citas-Terapeuta' });
+  }
+})
+terapiaRouter.route('/citas/paciente').get(async (req: Request, res: Response) => {
+  let controller = new CitaController();
+  let id: string = req.query.id as string;
+  try {
+    let result = await controller.getCitasPaciente(id);
+    return res.status(200).send(result);
+  } catch (error) {
+    LogError(`Error fetching Citas-Terapeuta: ${error}`);
+    return res.status(500).send({ message: 'Error fetching Citas-Terapeuta' });
   }
 })
 terapiaRouter.route('/citas').post(async (req: Request, res: Response) => {

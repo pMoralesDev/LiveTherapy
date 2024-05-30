@@ -23,6 +23,8 @@ export interface ICitaController {
     createCita(user:ICita): Promise<ICita>;
     updateCita(id: string, user: Partial<ICita>): Promise<ICita | null> ;
     deleteCita(id: string): Promise<ICita | null>;
+    getCitasTerapeuta(id:string): Promise<ICita[] | ICita | null>;
+    getCitasPaciente(id:string): Promise<ICita[] | ICita | null>;
 }
 
 
@@ -39,6 +41,7 @@ export interface ICuestionarioController {
     updateCuestionario(id: string, cuestionario: Partial<ICuestionario>): Promise<ICuestionario | null>;
     deleteCuestionario(id: string): Promise<ICuestionario | null>;
     getCuestionarioPreguntasName(): Promise<any[]>;
+    getModelTrueCuestionarios():Promise<any[]>;
 }
 
 export interface IMessageController {
@@ -57,5 +60,6 @@ export interface ITerapiaController {
     createTerapia(terapia: ITerapia): Promise<ITerapia>;
     updateTerapia(id: string, terapia: Partial<ITerapia>):Promise<ITerapia | null>;
     deleteTerapia(id:String): Promise <ITerapia | null>;
+    getPacientesTerapia (id:String): Promise <IUser[] | IUser | null>
 }
 
