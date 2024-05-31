@@ -39,6 +39,22 @@ cuestionarioRouter.route('/modelos').get(async (req: Request, res: Response) => 
     return res.status(500).send({ message: 'Error fetching cuestionarios' });
   }
 });
+cuestionarioRouter.route('/paciente').get(async (req: Request, res: Response) => {
+  let controller = new CuestionarioController();
+  let id: string = req.query.id as string;
+  try {
+    let result = await controller.getCuestionariosPaciente(id);
+    if (result) {
+      return res.status(200).send(result);
+    } else {
+      return res.status(404).send({ message: 'Error al traer los modelos de cuestionario' });
+    }
+    
+  } catch (error) {
+    LogError(`Error fetching cuestionarios: ${error}`);
+    return res.status(500).send({ message: 'Error fetching cuestionarios' });
+  }
+});
 cuestionarioRouter.route('/').post(async (req: Request, res: Response) => {
   let controller = new CuestionarioController();
   let cuestionario = req.body;

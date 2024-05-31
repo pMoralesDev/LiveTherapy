@@ -40,8 +40,8 @@ export interface ICuestionarioController {
     createCuestionario(cuestionario: ICuestionario): Promise<ICuestionario>;
     updateCuestionario(id: string, cuestionario: Partial<ICuestionario>): Promise<ICuestionario | null>;
     deleteCuestionario(id: string): Promise<ICuestionario | null>;
-    getCuestionarioPreguntasName(): Promise<any[]>;
     getModelTrueCuestionarios():Promise<any[]>;
+    getCuestionariosPaciente(id: string):Promise<ICuestionario | ICuestionario[] | null>;
 }
 
 export interface IMessageController {

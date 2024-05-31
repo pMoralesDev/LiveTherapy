@@ -1,6 +1,8 @@
 import CuestionarioModel from '../entities/cuestionario.entity';
 import { ICuestionario } from '../interfaces/ICuestionario.interface';
 import { LogError, LogInfo, LogSuccess } from '../../utils/logger';
+import TerapiaModel from '../entities/terapia.entity';
+import { ITerapia } from '../interfaces/ITerapia.interface';
 
 export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] | ICuestionario | null> => {
   try {
@@ -34,6 +36,45 @@ export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] 
   } catch (error) {
     LogError(`[ORM ERROR]: Error fetching cuestionarios - ${error}`);
     throw new Error('Error fetching cuestionarios');
+  }
+};
+
+export const getModelTrueCuestionariosORM = async (): Promise <any[]> => {
+  try {
+    const result = await CuestionarioModel.find({modelo: true})
+        .populate({
+          path: 'preguntas',
+          select: 'text tipo -_id'
+        }).
+        select('-respuestas -modelo');
+    LogSuccess(`[ORM SUCCESS]: Modelos de cuestionarios no personalizados`);
+    return result;
+  } catch (error) {
+      LogError(`[ORM ERROR]: Error buscando cuestionarios no personalizados - ${error}`);
+      throw error;
+  }
+};
+
+export const getCuestionariosPacienteORM = async (id: string): Promise<ICuestionario[] | ICuestionario | null> => {
+  try {
+      const terapia:ITerapia | null = await TerapiaModel.findOne({idPaciente: id});
+      if (terapia && terapia.registros && terapia.registros.length > 0) {
+        const cuestionarios = await CuestionarioModel.find({
+          '_id': { $in: terapia.registros }
+        })
+        .populate({
+          path: 'preguntas',
+        })
+        .exec();
+        LogSuccess(`[ORM SUCCESS]: Cuestionario asginados al paciente con id: ${id}`);
+        return cuestionarios;
+      } else {
+        LogInfo(`[ORM INFO]: No se encontraron cuestionarios asignados al pacietne con id: ${id}`);
+        return null;
+      }
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error fetching cuestionarios asigandos a paciente - ${error}`);
+    throw new Error('Error fetching cuestionarios-paciente');
   }
 };
 
@@ -84,47 +125,4 @@ export const deleteCuestionarioORM = async (id: string): Promise<ICuestionario |
   }
 };
 
-export const getCuestionarioPreguntasNameORM = async (): Promise<any[]> => {
-  try {
-    const result = await CuestionarioModel.aggregate([
-        {
-            $lookup: {
-                from: 'questions',
-                localField: 'preguntas',
-                foreignField: '_id',
-                as: 'questionDetails'
-            }
-        },
-        {
-            $project: {
-                name: 1,
-                modelo:1,
-                tipo:1,
-                preguntas: '$questionDetails.text',
-                respuestas:1
-            }
-        }
-    ]);
-    LogSuccess(`[ORM SUCCESS]: Cuestionario con nombres de preguntas`);
-    return result;
-  } catch (error) {
-      LogError(`[ORM ERROR]: Error buscando cuestionarios con nombres de preguntas - ${error}`);
-      throw error;
-  }
-};
 
-export const getModelTrueCuestionariosORM = async (): Promise <any[]> => {
-  try {
-    const result = await CuestionarioModel.find({modelo: true})
-        .populate({
-          path: 'preguntas',
-          select: 'text tipo -_id'
-        }).
-        select('-respuestas -modelo');
-    LogSuccess(`[ORM SUCCESS]: Modelos de cuestionarios no personalizados`);
-    return result;
-  } catch (error) {
-      LogError(`[ORM ERROR]: Error buscando cuestionarios no personalizados - ${error}`);
-      throw error;
-  }
-};
