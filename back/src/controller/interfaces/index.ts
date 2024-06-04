@@ -25,6 +25,7 @@ export interface ICitaController {
     deleteCita(id: string): Promise<ICita | null>;
     getCitasTerapeuta(id:string): Promise<ICita[] | ICita | null>;
     getCitasPaciente(id:string): Promise<ICita[] | ICita | null>;
+    getInformesTerapeuta(id: string): Promise <any[] | null>;
 }
 
 

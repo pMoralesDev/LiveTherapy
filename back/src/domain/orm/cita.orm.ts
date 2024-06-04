@@ -2,6 +2,9 @@ import CitaModel from "../entities/cita.entity";
 import { ICita } from "../interfaces/ICita.interface";
 import { LogError, LogInfo, LogSuccess } from "../../utils/logger";
 import TerapiaModel from "../entities/terapia.entity";
+import { ITerapia } from "../interfaces/ITerapia.interface";
+import UserModel from "../entities/user.entity";
+import { stringify } from "querystring";
 
 export const getCitasORM = async (id?: string): Promise<ICita[] | ICita | null> => {
   try {
@@ -65,6 +68,54 @@ export const getCitasPacienteORM = async (id: string): Promise<ICita[] | ICita |
     throw new Error('Error creating terapia');
   }
 };
+/**
+ * Devuleve los datos de los informes emitidos por un terapeuta
+ * @param id identificador del terapeuta del que vamos a obtener sus informes
+ * @returns devuelve un resumen de los datos relacionados con los informes del terapeuta
+ */
+export const getInformesTerapeutaORM = async (id: string): Promise< any[] | null> => {
+  try{
+    const terapias = await TerapiaModel.find({ idTerapeuta: id });
+    
+    // Crear un mapa que asocie cada cita con su paciente correspondiente
+    const citaPacienteMap = new Map();
+    terapias.forEach(terapia => {
+      terapia.citas?.forEach((citaId: { toString: () => any; }) => {
+        citaPacienteMap.set(citaId.toString(), terapia.idPaciente.toString());
+      });
+    });
+
+    // Extraer todos los IDs de citas y pacientes
+    const idCitas = terapias.flatMap(terapia => terapia.citas ?? []);
+    const idPacientes = Array.from(new Set(terapias.map(terapia => terapia.idPaciente.toString())));
+
+    // Recuperar las citas y pacientes correspondientes
+    const citas = await CitaModel.find({ '_id': { $in: idCitas } });
+    const pacientes = await UserModel.find({ '_id': { $in: idPacientes } });
+
+    // Crear un mapa de pacientes
+    const mapaPacientes = new Map(pacientes.map(paciente => [paciente._id.toString(), paciente]));
+
+    // Construir los informes asociando correctamente cada cita a su paciente
+    const informes = citas.map(cita => {
+      const pacienteId = citaPacienteMap.get(cita._id.toString());
+      const paciente = mapaPacientes.get(pacienteId);
+      return {
+        fechaInforme: cita.date,
+        informe: cita.informe,
+        paciente: paciente ? {
+          nombre: paciente.name,
+        } : null
+      };
+    });
+
+    return informes;
+
+  }catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener los informes de un terapeuta ${error}`);
+    throw new Error('Error feching advices');
+  }
+}
 
 export const createCitaORM = async (cita: ICita): Promise<ICita> => {
   try {

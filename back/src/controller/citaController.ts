@@ -2,7 +2,7 @@ import { Get, Post, Put, Delete, Body, Query, Route, Tags } from 'tsoa';
 import { ICitaController } from './interfaces';
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
 import { IUser } from '@/domain/interfaces/IUser.interface';
-import { createCitaORM, deleteCitaORM, getCitasORM, getCitasPacienteORM, getCitasTerapeutaORM, updateCitaORM } from '@/domain/orm/cita.orm';
+import { createCitaORM, deleteCitaORM, getCitasORM, getCitasPacienteORM, getCitasTerapeutaORM, getInformesTerapeutaORM, updateCitaORM } from '@/domain/orm/cita.orm';
 import { ICita } from '@/domain/interfaces/ICita.interface';
 
 @Route('/api/terapias/citas')
@@ -57,6 +57,23 @@ export class CitaController implements ICitaController {
     } catch (error) {
       LogError(`[/api/citas] Error buscando citas de paciente: ${error}`);
       throw new Error('Error fetching Citas-paciente');
+    }
+  }
+
+  @Get('/informes')
+  public async getInformesTerapeuta(@Query() id: string): Promise< any[] | null> {
+    try {
+      const result = await getInformesTerapeutaORM(id);
+      if (result) {
+        LogSuccess(`[/api/citas/informes] Informes del terapeuta con ID: ${id}`);
+        return result;
+      } else {
+        LogSuccess(`[/api/citas/informes] No se encontraron informes del terapeuta con ID: ${id}`);
+        return result;
+      }
+    } catch (error) {
+      LogError(`[/api/citas] Error buscando informes del terapeuta: ${error}`);
+      throw new Error('Error fetching informes-terapeuta');
     }
   }
 

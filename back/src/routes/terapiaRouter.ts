@@ -124,6 +124,17 @@ terapiaRouter.route('/citas/paciente').get(async (req: Request, res: Response) =
     return res.status(500).send({ message: 'Error fetching Citas-Terapeuta' });
   }
 })
+terapiaRouter.route('/citas/informes').get(async (req: Request, res: Response) => {
+  let controller = new CitaController();
+  let id: string = req.query.id as string;
+  try {
+    let result = await controller.getInformesTerapeuta(id);
+    return res.status(200).send(result);
+  } catch (error) {
+    LogError(`Error fetching Citas-Terapeuta: ${error}`);
+    return res.status(500).send({ message: 'Error fetching Citas-Terapeuta' });
+  }
+})
 terapiaRouter.route('/citas').post(async (req: Request, res: Response) => {
   let controller = new CitaController();
   let cita = req.body;
