@@ -1,6 +1,6 @@
 import { Get, Post, Put, Body, Query, Route, Tags, Delete } from 'tsoa';
 import { LogError, LogInfo, LogSuccess, LogWarning } from '../utils/logger';
-import { getTerapiasORM, createTerapiaORM, updateTerapiaORM, deleteTerapiaORM, getPacientesTerapiaORM, getTerapiasTerapeutaORM } from '../domain/orm/terapia.orm';
+import { getTerapiasORM, createTerapiaORM, updateTerapiaORM, deleteTerapiaORM, getPacientesTerapiaORM, getTerapiasTerapeutaORM, getTerapiasPacienteORM } from '../domain/orm/terapia.orm';
 import { ITerapiaController } from './interfaces';
 import { ITerapia } from '@/domain/interfaces/ITerapia.interface';
 import { IUser } from '@/domain/interfaces/IUser.interface';
@@ -52,6 +52,22 @@ export class TerapiaController implements ITerapiaController {
         return result;
       } else {
         LogWarning(`[/api/terapias/terapeuta] El terapeuta con id: ${id} no tiene terapias asignadas`);
+        return result;
+      }
+    } catch (error) {
+      LogError(`[/api/terapias/pacientes] Error fetching terapias-pacientes: ${error}`);
+      throw new Error('Error fetching terapias-pacientes');
+    }
+  }
+  @Get('/terapeutaPaciente')
+  public async getTerapiasPaciente(@Query() id: string): Promise<ITerapia | null> {
+    try {
+      const result = await getTerapiasPacienteORM(id);
+      if (result) {
+        LogSuccess(`[/api/terapias/terapeutaPaciente] Devueltos todas las terapia del paciente con id: ${id}`);
+        return result;
+      } else {
+        LogWarning(`[/api/terapias/terapeutaPaciente] El terapeuta con id: ${id} no tiene terapias asignadas`);
         return result;
       }
     } catch (error) {

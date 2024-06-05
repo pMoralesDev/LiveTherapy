@@ -110,6 +110,30 @@ export const getTerapiasTerapeutaORM = async (id: string): Promise<ITerapia[] | 
     throw new Error('Error feching terapia');
   }
 };
+export const getTerapiasPacienteORM = async (id: string): Promise< ITerapia | null> => {
+  try {
+    const terapias = await TerapiaModel.findOne({idPaciente: id})
+      .populate({
+        path: 'idPaciente',
+        select: '-password'
+      })
+      .populate({
+        path: 'citas'
+      })
+      .populate({
+        path: 'registros',
+      })
+      .populate({
+        path: 'chat'
+      })
+      .exec();
+    LogSuccess(`[ORM SUCCESS]: Obtenida la terapia del paciente con id: ${id}`);
+    return terapias;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener las terapias de paciente ${error}`);
+    throw new Error('Error feching terapia');
+  }
+};
 
 export const createTerapiaORM = async (terapia: ITerapia): Promise<ITerapia> => {
   try {

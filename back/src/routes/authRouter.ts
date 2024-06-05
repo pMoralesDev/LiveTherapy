@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
-import { hashPassword, comparePassword, generateToken } from '../utils/auth'; // Importa las funciones de auth.ts
+import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 import UserModel from '@/domain/entities/user.entity';
 
 const authRouter = express.Router();

@@ -64,5 +64,6 @@ export interface ITerapiaController {
     deleteTerapia(id:String): Promise <ITerapia | null>;
     getPacientesTerapia (id:String): Promise <IUser[] | IUser | null>
     getTerapiasTerapeuta (id: string): Promise<ITerapia | ITerapia[] | null>;
+    getTerapiasPaciente (id: string): Promise<ITerapia | null>;
 }
 
