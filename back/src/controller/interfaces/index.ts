@@ -43,6 +43,7 @@ export interface ICuestionarioController {
     deleteCuestionario(id: string): Promise<ICuestionario | null>;
     getModelTrueCuestionarios():Promise<any[]>;
     getCuestionariosPaciente(id: string):Promise<ICuestionario | ICuestionario[] | null>;
+    getCuestionariosTerapeuta(id: string):Promise<ICuestionario | ICuestionario[] | null>;
 }
 
 export interface IMessageController {
@@ -62,5 +63,6 @@ export interface ITerapiaController {
     updateTerapia(id: string, terapia: Partial<ITerapia>):Promise<ITerapia | null>;
     deleteTerapia(id:String): Promise <ITerapia | null>;
     getPacientesTerapia (id:String): Promise <IUser[] | IUser | null>
+    getTerapiasTerapeuta (id: string): Promise<ITerapia | ITerapia[] | null>;
 }
 

@@ -81,6 +81,35 @@ export const getPacientesTerapiaORM = async (id: string): Promise<IUser[] | IUse
     throw new Error('Error creating terapia');
   }
 };
+/**
+ * Trae los datos de las terapias que tiene asignada un terapeuta
+ * @param {string} id del terapeuta del que se quiere obtener las terapias a su cargo
+ * @returns devuelve los datos de todas las terapias de un terapeuta
+ */
+export const getTerapiasTerapeutaORM = async (id: string): Promise<ITerapia[] | ITerapia | null> => {
+  try {
+    const terapias = await TerapiaModel.find({idTerapeuta: id})
+      .populate({
+        path: 'idPaciente',
+        select: '-password'
+      })
+      .populate({
+        path: 'citas'
+      })
+      .populate({
+        path: 'registros',
+      })
+      .populate({
+        path: 'chat'
+      })
+      .exec();
+    LogSuccess(`[ORM SUCCESS]: Obtenidas las terapias del terapeuta con id: ${id}`);
+    return terapias;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error al obtener las terapias de terapeuta ${error}`);
+    throw new Error('Error feching terapia');
+  }
+};
 
 export const createTerapiaORM = async (terapia: ITerapia): Promise<ITerapia> => {
   try {

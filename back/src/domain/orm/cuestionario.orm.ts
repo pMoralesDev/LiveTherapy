@@ -38,13 +38,16 @@ export const getCuestionariosORM = async (id?: string): Promise<ICuestionario[] 
     throw new Error('Error fetching cuestionarios');
   }
 };
-
+/**
+ * Funcion para visualizar los cuestionarios que son modelos proporcionados por la plataforma
+ * @returns devuelve los datos de los cuestionerios modelo
+ */
 export const getModelTrueCuestionariosORM = async (): Promise <any[]> => {
   try {
     const result = await CuestionarioModel.find({modelo: true})
         .populate({
           path: 'preguntas',
-          select: 'text tipo -_id'
+          select: 'text tipo'
         }).
         select('-respuestas -modelo');
     LogSuccess(`[ORM SUCCESS]: Modelos de cuestionarios no personalizados`);
@@ -54,7 +57,11 @@ export const getModelTrueCuestionariosORM = async (): Promise <any[]> => {
       throw error;
   }
 };
-
+/**
+ * Funcion para que los pacientes puedan visualizar los cuestionarios que tienen asignados
+ * @param id identificador unico del paciente
+ * @returns devuelve lso datos de los cuestionarios asignados al paciente para ser rellenados
+ */
 export const getCuestionariosPacienteORM = async (id: string): Promise<ICuestionario[] | ICuestionario | null> => {
   try {
       const terapia:ITerapia | null = await TerapiaModel.findOne({idPaciente: id});
@@ -67,6 +74,35 @@ export const getCuestionariosPacienteORM = async (id: string): Promise<ICuestion
         })
         .exec();
         LogSuccess(`[ORM SUCCESS]: Cuestionario asginados al paciente con id: ${id}`);
+        return cuestionarios;
+      } else {
+        LogInfo(`[ORM INFO]: No se encontraron cuestionarios asignados al pacietne con id: ${id}`);
+        return null;
+      }
+  } catch (error) {
+    LogError(`[ORM ERROR]: Error fetching cuestionarios asigandos a paciente - ${error}`);
+    throw new Error('Error fetching cuestionarios-paciente');
+  }
+};
+/**
+ * Funcion para visualizar los cuestionarios que el terapeuta ha asignado
+ * @param id identificador del terapeuta
+ * @returns devuelve los registros que ha asignado el terapeuta
+ */
+export const getCuestionariosTerapeutaORM = async (id: string): Promise<ICuestionario[] | ICuestionario | null> => {
+  try {
+      const terapias:ITerapia [] | null = await TerapiaModel.find({idTerapeuta: id});
+      if (terapias) {
+        const idRegistros = terapias.flatMap(terapia => terapia.registros ?? [])
+        const cuestionarios = await CuestionarioModel.find({
+          '_id': { $in: idRegistros }
+        })
+        .populate({
+          path: 'preguntas',
+          select: 'text'
+        })
+        .exec();
+        LogSuccess(`[ORM SUCCESS]: Cuestionario asginados al terapeuta con id: ${id}`);
         return cuestionarios;
       } else {
         LogInfo(`[ORM INFO]: No se encontraron cuestionarios asignados al pacietne con id: ${id}`);
@@ -91,8 +127,6 @@ export const createCuestionarioORM = async (cuestionario: ICuestionario): Promis
 };
 
 export const updateCuestionarioORM = async (id: string, cuestionario: Partial<ICuestionario>): Promise<ICuestionario | null> => {
-  LogInfo(`[ORM INFO]: Attempting to update cuestionario with ID ${id}`);
-  LogInfo(`[ORM INFO]: Update data: ${JSON.stringify(cuestionario)}`);
   try {
     const updatedCuestionario = await CuestionarioModel.findByIdAndUpdate(id, cuestionario, { new: true }).populate('preguntas').exec();
     if (updatedCuestionario) {

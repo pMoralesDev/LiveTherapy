@@ -47,12 +47,28 @@ cuestionarioRouter.route('/paciente').get(async (req: Request, res: Response) =>
     if (result) {
       return res.status(200).send(result);
     } else {
-      return res.status(404).send({ message: 'Error al traer los modelos de cuestionario' });
+      return res.status(404).send({ message: `Error al traer registros del pacietne con id: ${id}` });
     }
     
   } catch (error) {
-    LogError(`Error fetching cuestionarios: ${error}`);
-    return res.status(500).send({ message: 'Error fetching cuestionarios' });
+    LogError(`Error fetching registros-paciente: ${error}`);
+    return res.status(500).send({ message: 'Error fetching registros-paciente' });
+  }
+});
+cuestionarioRouter.route('/terapeuta').get(async (req: Request, res: Response) => {
+  let controller = new CuestionarioController();
+  let id: string = req.query.id as string;
+  try {
+    let result = await controller.getCuestionariosTerapeuta(id);
+    if (result) {
+      return res.status(200).send(result);
+    } else {
+      return res.status(404).send({ message: `Error al traer los registros asignados del terapeuta con id: ${id}` });
+    }
+    
+  } catch (error) {
+    LogError(`Error fetching registros-terapeuta: ${error}`);
+    return res.status(500).send({ message: 'Error fetching registros-terapeuta' });
   }
 });
 cuestionarioRouter.route('/').post(async (req: Request, res: Response) => {

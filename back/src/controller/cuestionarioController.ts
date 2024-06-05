@@ -2,7 +2,7 @@ import { Get, Post, Put, Delete, Body, Query, Route, Tags } from 'tsoa';
 import { LogError, LogInfo, LogSuccess } from '../utils/logger';
 import { ICuestionarioController } from './interfaces';
 import { ICuestionario } from '@/domain/interfaces/ICuestionario.interface';
-import { createCuestionarioORM, deleteCuestionarioORM, getCuestionariosORM, updateCuestionarioORM,   getCuestionariosPacienteORM, getModelTrueCuestionariosORM } from '@/domain/orm/cuestionario.orm';
+import { createCuestionarioORM, deleteCuestionarioORM, getCuestionariosORM, updateCuestionarioORM,   getCuestionariosPacienteORM, getModelTrueCuestionariosORM, getCuestionariosTerapeutaORM } from '@/domain/orm/cuestionario.orm';
 
 
 @Route('/api/cuestionarios')
@@ -41,6 +41,18 @@ export class CuestionarioController implements ICuestionarioController {
   public async getCuestionariosPaciente(@Query() id: string): Promise<ICuestionario | ICuestionario[] | null>{
     try {
       const result = await getCuestionariosPacienteORM(id);
+      LogSuccess(`[/api/cuestionarios] Respuesta a la peticion de registros del paciente con id: ${id}`);
+      return result;
+    } catch (error) {
+      LogError(`[/api/cuestionarios] Error fetching registros-paciente: ${error}`);
+      throw new Error('Error fetching registros-paciente');
+    }
+  }
+
+  @Get('/terapeuta')
+  public async getCuestionariosTerapeuta(@Query() id: string): Promise<ICuestionario | ICuestionario[] | null>{
+    try {
+      const result = await getCuestionariosTerapeutaORM(id);
       LogSuccess(`[/api/cuestionarios] Respuesta a la peticion de cuestionarios no personalizados`);
       return result;
     } catch (error) {

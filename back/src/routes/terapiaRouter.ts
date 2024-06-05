@@ -36,6 +36,19 @@ terapiaRouter.route('/pacientes').get(async (req: Request, res: Response) => {
       return res.status(500).send({ message: 'Error fetching terapias-pacientes' });
     }
   });
+  
+  // Ruta para obtener todos las terapias de un terapeuta
+terapiaRouter.route('/terapeuta').get(async (req: Request, res: Response) => {
+    let controller = new TerapiaController();
+    let id: string = req.query.id as string;
+    try {
+      let result = await controller.getTerapiasTerapeuta(id);
+      return res.status(200).send(result);
+    } catch (error) {
+      LogError(`Error fetching terapias-terapeuta: ${error}`);
+      return res.status(500).send({ message: 'Error fetching terapias-terapeuta' });
+    }
+  });
   // Ruta para crear una terapia
 terapiaRouter.route('/').post(async (req: Request, res: Response) => {
     let controller = new TerapiaController();
