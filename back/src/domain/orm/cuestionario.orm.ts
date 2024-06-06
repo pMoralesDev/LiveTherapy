@@ -72,6 +72,9 @@ export const getCuestionariosPacienteORM = async (id: string): Promise<ICuestion
         .populate({
           path: 'preguntas',
         })
+        .populate({
+          path: 'respuestas',
+        })
         .exec();
         LogSuccess(`[ORM SUCCESS]: Cuestionario asginados al paciente con id: ${id}`);
         return cuestionarios;
